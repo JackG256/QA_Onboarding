@@ -1,0 +1,338 @@
+{
+	"info": {
+		"_postman_id": "e478ff68-e17c-417b-9c23-76da5d651a75",
+		"name": "QA Onboarding",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24773281"
+	},
+	"item": [
+		{
+			"name": "Get User List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    // Test code 200 -> Correct connection\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/users",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new user and save his ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    // Test valid creation of user\r",
+							"    // 201 -> user created\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"// parse body and save id to variable\r",
+							"var JsonData = JSON.parse(responseBody)\r",
+							"\r",
+							"// Failsafe to avoid null values if the user is already created\r",
+							"if (JsonData.id != null){\r",
+							"pm.environment.set(\"USER_ID\", JsonData.id);\r",
+							"}\r",
+							"\r",
+							"pm.test(\"User ID got saved\", function(){\r",
+							"\r",
+							"    pm.expect(pm.environment.get(\"USER_ID\")).to.equal(JsonData.id)\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{GoRest API Key}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/users?name={{NAME}}&email={{EMAIL}}&gender={{GENDER}}&status={{STATUS}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{NAME}}"
+						},
+						{
+							"key": "email",
+							"value": "{{EMAIL}}"
+						},
+						{
+							"key": "gender",
+							"value": "{{GENDER}}"
+						},
+						{
+							"key": "status",
+							"value": "{{STATUS}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify User Existence",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// parse body and save to variable\r",
+							"var JsonData = JSON.parse(responseBody)\r",
+							"\r",
+							"pm.test(\"Enviroment variables match response body\", function(){\r",
+							"\r",
+							"    // Assert ID is the same since creation assignment\r",
+							"    pm.expect(pm.environment.get(\"USER_ID\")).to.equal(JsonData.id)\r",
+							"\r",
+							"    //Assert name is the same as inputted data\r",
+							"    pm.expect(pm.environment.get(\"NAME\")).to.equal(JsonData.name)\r",
+							"\r",
+							"    //Assert email adress is the same as inputted data\r",
+							"    pm.expect(pm.environment.get(\"EMAIL\")).to.equal(JsonData.email)\r",
+							"\r",
+							"    //Assert gender is the same as inputted data\r",
+							"    pm.expect(pm.environment.get(\"GENDER\")).to.equal(JsonData.gender)\r",
+							"\r",
+							"    //Assert status is the same as inputted data\r",
+							"    pm.expect(pm.environment.get(\"STATUS\")).to.equal(JsonData.status)\r",
+							"\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{GoRest API Key}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/users/{{USER_ID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit user name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// parse body and save to variable\r",
+							"var JsonData = JSON.parse(responseBody)\r",
+							"\r",
+							"pm.test(\"Name was changed in previous request\", function(){\r",
+							"\r",
+							"    //Assert name is now different from  inputted data\r",
+							"    pm.expect(pm.environment.get(\"NAME\")).to.not.equal(JsonData.name)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{GoRest API Key}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/users/{{USER_ID}}?name={{NAME_EDIT}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "{{NAME_EDIT}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify name change",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// parse body and save to variable\r",
+							"var JsonData = JSON.parse(responseBody)\r",
+							"\r",
+							"pm.test(\"Name was changed in previous request\", function(){\r",
+							"\r",
+							"    //Assert name is now different from  inputted data\r",
+							"    pm.expect(pm.environment.get(\"NAME\")).to.not.equal(JsonData.name)\r",
+							"\r",
+							"    //Assert name is the same as name_edit\r",
+							"    pm.expect(pm.environment.get(\"NAME_EDIT\")).to.equal(JsonData.name)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{GoRest API Key}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/users/{{USER_ID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete created user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    // Test to ensure correct DELETE response\r",
+							"    // No body = user deleted\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{GoRest API Key}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/users/{{USER_ID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "GoRest API Key",
+			"value": "fa8fc32d7c8735fa786ac65c1e917ff9061ba28523552813ebd29ba3f67e7b15"
+		}
+	]
+}
