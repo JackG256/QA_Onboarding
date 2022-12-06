@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e478ff68-e17c-417b-9c23-76da5d651a75",
+		"_postman_id": "bd0cf24c-8ac6-44d7-869c-e37edcd7f887",
 		"name": "QA Onboarding",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24773281"
@@ -70,16 +70,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{GoRest API Key}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
 				"header": [],
 				"url": {
@@ -151,16 +141,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{GoRest API Key}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -201,16 +181,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{GoRest API Key}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PATCH",
 				"header": [],
 				"url": {
@@ -260,16 +230,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{GoRest API Key}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -303,16 +263,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{GoRest API Key}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
@@ -329,10 +279,34 @@
 			"response": []
 		}
 	],
-	"variable": [
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{API KEY}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
 		{
-			"key": "GoRest API Key",
-			"value": "fa8fc32d7c8735fa786ac65c1e917ff9061ba28523552813ebd29ba3f67e7b15"
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
