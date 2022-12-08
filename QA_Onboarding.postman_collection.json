@@ -72,31 +72,22 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{NAME}}\",\r\n    \"email\": \"{{EMAIL}}\",\r\n    \"gender\": \"{{GENDER}}\",\r\n    \"status\": \"{{STATUS}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{URL}}/users?name={{NAME}}&email={{EMAIL}}&gender={{GENDER}}&status={{STATUS}}",
+					"raw": "{{URL}}/users",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
 						"users"
-					],
-					"query": [
-						{
-							"key": "name",
-							"value": "{{NAME}}"
-						},
-						{
-							"key": "email",
-							"value": "{{EMAIL}}"
-						},
-						{
-							"key": "gender",
-							"value": "{{GENDER}}"
-						},
-						{
-							"key": "status",
-							"value": "{{STATUS}}"
-						}
 					]
 				}
 			},
@@ -165,16 +156,7 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"// parse body and save to variable\r",
-							"var JsonData = JSON.parse(responseBody)\r",
-							"\r",
-							"pm.test(\"Name was changed in previous request\", function(){\r",
-							"\r",
-							"    //Assert name is now different from  inputted data\r",
-							"    pm.expect(pm.environment.get(\"NAME\")).to.not.equal(JsonData.name)\r",
-							"})"
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -223,6 +205,89 @@
 							"\r",
 							"    //Assert name is the same as name_edit\r",
 							"    pm.expect(pm.environment.get(\"NAME_EDIT\")).to.equal(JsonData.name)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/users/{{USER_ID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit name again via JSON body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{NAME}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/users/{{USER_ID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users",
+						"{{USER_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify name change Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// parse body and save to variable\r",
+							"var JsonData = JSON.parse(responseBody)\r",
+							"\r",
+							"pm.test(\"Name was changed in previous request\", function(){\r",
+							"\r",
+							"    //Assert name is now different from  inputted data\r",
+							"    pm.expect(pm.environment.get(\"NAME\")).to.equal(JsonData.name)\r",
+							"\r",
+							"    //Assert name is the same as name_edit\r",
+							"    pm.expect(pm.environment.get(\"NAME_EDIT\")).to.not.equal(JsonData.name)\r",
 							"})"
 						],
 						"type": "text/javascript"
